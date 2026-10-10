@@ -7,7 +7,7 @@ const TOKEN_KEY = 'gh-token';
 const getToken = () => { try { return localStorage.getItem(TOKEN_KEY); } catch { return null; } };
 const setToken = t => { try { localStorage.setItem(TOKEN_KEY, t); } catch {} };
 
-if (location.hash === '#admin' && !getToken()) {
+if (location.hash === '#admin') { // visiting #admin always lets you paste a new token
   const t = prompt('paste your github token (only saved in this browser):');
   if (t) setToken(t.trim());
   history.replaceState(null, '', location.pathname);
@@ -15,16 +15,18 @@ if (location.hash === '#admin' && !getToken()) {
 if (getToken()) form.hidden = false;
 
 // yourname.github.io -> owner "yourname", repo "yourname.github.io"
+// yourname.github.io/something/ -> owner "yourname", repo "something"
 const OWNER = location.hostname.split('.')[0];
-const REPO = location.hostname;
+const parts = location.pathname.split('/').filter(Boolean);
+const REPO = parts.length > 1 || (parts.length === 1 && !parts[0].includes('.')) ? parts[0] : location.hostname;
 const API = `https://api.github.com/repos/${OWNER}/${REPO}/contents/`;
 
 async function gh(path, opts = {}) {
-  const res = await fetch(API + path, {
+  const res = await fetch((path.startsWith('https') ? path : API + path), {
     ...opts,
     headers: { Authorization: `Bearer ${getToken()}`, Accept: 'application/vnd.github+json', ...(opts.headers || {}) },
   });
-  if (!res.ok) throw new Error(`github said ${res.status}`);
+  if (!res.ok) throw new Error(`github said ${res.status} while saving ${path}`);
   return res.json();
 }
 
@@ -61,6 +63,14 @@ form?.addEventListener('submit', async e => {
   statusEl.textContent = 'saving…';
 
   try {
+    // check the token can see the repo before saving anything
+    const repoUrl = `https://api.github.com/repos/${OWNER}/${REPO}`;
+    const check = await fetch(repoUrl, { headers: { Authorization: `Bearer ${getToken()}` } });
+    if (check.status === 401) throw new Error('github rejected the token (expired or pasted wrong). visit index.html#admin to paste it again');
+    if (check.status === 404) throw new Error(`the token can't see the repo ${OWNER}/${REPO}. give it access to that repo, or check the repo name`);
+    const info = await check.json();
+    if (info.permissions && !info.permissions.push) throw new Error('the token can read the repo but not write. set contents to "read and write"');
+
     const today = new Date().toLocaleDateString('en-CA'); // yyyy-mm-dd
     const entry = { title, date: today };
 
@@ -83,7 +93,7 @@ form?.addEventListener('submit', async e => {
     form.reset();
     statusEl.innerHTML = `added to <a href="${section}.html">${section}</a>. it'll show up in about a minute.`;
   } catch (err) {
-    statusEl.textContent = `didn't save: ${err.message}. check your token, or try again.`;
+    statusEl.textContent = `didn't save: ${err.message}.`;
   } finally {
     button.disabled = false;
   }
