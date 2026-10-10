@@ -5,7 +5,7 @@ const stars = r => r ? '★'.repeat(Math.floor(r)) + (r % 1 ? '½' : '') : '';
 
 if (list) {
   fetch(list.dataset.src + '?t=' + Date.now()) // skip the browser cache so new entries show up
-    .then(r => r.json())
+    .then(r => r.ok ? r.json() : []) // no file yet = empty list
     .then(items => {
       items.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
       list.innerHTML = items.length ? items.map(i => `

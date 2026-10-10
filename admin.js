@@ -82,12 +82,15 @@ form?.addEventListener('submit', async e => {
     }
 
     const dataPath = `data/${section}.json`;
-    const current = await gh(dataPath);
-    const items = JSON.parse(fromB64(current.content));
+    // read the section's list; if the file doesn't exist yet, start a new one
+    let items = [], sha;
+    const res = await fetch(API + dataPath + '?t=' + Date.now(), { headers: { Authorization: `Bearer ${getToken()}`, Accept: 'application/vnd.github+json' } });
+    if (res.ok) { const current = await res.json(); items = JSON.parse(fromB64(current.content)); sha = current.sha; }
+    else if (res.status !== 404) throw new Error(`github said ${res.status} while reading ${dataPath}`);
     items.unshift(entry);
     await gh(dataPath, {
       method: 'PUT',
-      body: JSON.stringify({ message: `add to ${section}: ${title}`, content: toB64(JSON.stringify(items, null, 2) + '\n'), sha: current.sha }),
+      body: JSON.stringify({ message: `add to ${section}: ${title}`, content: toB64(JSON.stringify(items, null, 2) + '\n'), ...(sha ? { sha } : {}) }),
     });
 
     form.reset();
