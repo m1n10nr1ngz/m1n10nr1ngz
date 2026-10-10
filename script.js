@@ -1,3 +1,10 @@
+// bump this every time the site code changes, so you can tell which version your browser is running
+const SITE_VERSION = 'oct 10, 2026 · 6:35 pm';
+const badge = document.createElement('div');
+badge.className = 'version';
+badge.textContent = 'updated ' + SITE_VERSION;
+document.body.appendChild(badge);
+
 // Reads the JSON file named in <ul id="list" data-src="..."> and lists the entries, newest first.
 const list = document.querySelector('#list');
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));

@@ -52,3 +52,11 @@ ul#list li.empty { display: block; }
 #add-form button:hover { border-color: var(--text); }
 #add-form button:disabled { opacity: .5; cursor: wait; }
 #add-status { margin: 0; }
+
+/* "updated …" stamp in the top right */
+.version {
+  position: fixed; top: 12px; right: 12px;
+  padding: 4px 10px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--bg); color: var(--muted);
+  font: 12px system-ui, sans-serif;
+}
