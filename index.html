@@ -11,5 +11,20 @@
   <h1>home</h1>
   <p>everything i'm reading, watching, and listening to, in one place.</p>
   <p><a href="books.html">books</a> · <a href="films.html">films</a> · <a href="tv.html">tv</a> · <a href="music.html">music</a></p>
+  <form id="add-form" hidden>
+    <input name="title" type="text" placeholder="title" required autocomplete="off">
+    <div class="row">
+      <select name="section">
+        <option value="books">books</option>
+        <option value="films">films</option>
+        <option value="tv">tv</option>
+        <option value="music">music</option>
+      </select>
+      <input name="image" type="file" accept="image/*">
+    </div>
+    <button type="submit">add</button>
+    <p id="add-status" class="meta"></p>
+  </form>
+  <script src="admin.js"></script>
 </body>
 </html>
