@@ -16,7 +16,7 @@ if (list) {
             ${i.rating ? ` <span class="rating">${stars(i.rating)}</span>` : ''}
           </div>
           ${i.note ? `<div class="note">${esc(i.note)}</div>` : ''}
-        </li>`).join('') : '<li class="empty">Nothing here yet.</li>';
+        </li>`).join('') : '<li class="empty">nothing here yet.</li>';
     })
-    .catch(() => { list.innerHTML = '<li class="empty">Couldn\'t load entries.</li>'; });
+    .catch(() => { list.innerHTML = '<li class="empty">couldn\'t load entries.</li>'; });
 }
