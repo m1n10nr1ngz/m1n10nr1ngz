@@ -3,22 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>home</title>
+  <title>m1n10nr1ngz</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav><a href="index.html" class="active">home</a><a href="books.html">books</a><a href="films.html">films</a><a href="tv.html">tv</a><a href="music.html">music</a></nav>
-  <h1>home</h1>
-  <p>everything i'm reading, watching, and listening to, in one place.</p>
-  <p><a href="books.html">books</a> · <a href="films.html">films</a> · <a href="tv.html">tv</a> · <a href="music.html">music</a></p>
+  <nav><a href="index.html" class="active">home</a><a href="books.html">books</a><a href="films.html">films</a><a href="tv.html">tv</a><a href="music.html">music</a><a href="articles.html">articles</a></nav>
+  <h1>m1n10nr1ngz</h1>
+  <p><a href="books.html">books</a> · <a href="films.html">films</a> · <a href="tv.html">tv</a> · <a href="music.html">music</a> · <a href="articles.html">articles</a></p>
   <form id="add-form" hidden>
     <input name="title" type="text" placeholder="title" required autocomplete="off">
+    <textarea name="note" rows="2" placeholder="short description (optional). links work: paste a url, or [text](https://...)"></textarea>
     <div class="row">
       <select name="section">
         <option value="books">books</option>
         <option value="films">films</option>
         <option value="tv">tv</option>
         <option value="music">music</option>
+        <option value="articles">articles</option>
       </select>
       <input name="image" type="file" accept="image/*">
     </div>
